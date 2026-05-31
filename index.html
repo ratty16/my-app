@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashwin & Ratty's Baby Reveal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Quicksand:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background Decor Overlay -->
+    <div class="bg-decor-bubbles"></div>
+    <div class="bg-decor-stars"></div>
+    
+
+
+    <!-- Main Container -->
+    <main class="app-container">
+        
+        <!-- Top Navigation / Progress Tracker -->
+        <header class="app-header hidden" id="appHeader">
+            <div class="progress-track">
+                <div class="progress-line" id="progressLine"></div>
+                <div class="footprint-tracker" id="footprintTracker">👣</div>
+            </div>
+            <div class="header-actions">
+                <span class="slide-indicator" id="slideIndicator">1 / 10</span>
+                <button class="music-toggle" id="musicToggleBtn" onclick="toggleMusic()" title="Play sound effects & music">🔊 FX</button>
+            </div>
+        </header>
+
+        <!-- Slides Wrapper -->
+        <section class="slides-container" id="slidesContainer">
+
+            <!-- SLIDE 0: Welcome & Guest Setup -->
+            <article class="slide-card active" id="slide0">
+                <div class="logo-box">
+                    <span class="logo-emoji bubble-anim">👶</span>
+                    <h1>Ashwin & Ratty's</h1>
+                    <h2>Baby Reveal</h2>
+                </div>
+                <p class="welcome-tagline">We're so thrilled to share this beautiful journey with you! Let's play a fun game of predictions before we pop the big balloon.</p>
+                
+                <form id="guestForm" onsubmit="handleGuestSubmit(event)">
+                    <div class="form-group">
+                        <label for="guestName">Who are you?</label>
+                        <input type="text" id="guestName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload your fav memory together</label>
+                        <div class="upload-dropzone" id="photoDropzone" onclick="triggerPhotoUpload()">
+                            <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <p id="uploadStatus">Tap to select / take a photo</p>
+                            <input type="file" id="guestPhoto" accept="image/*" class="hidden-input" onchange="previewGuestPhoto(event)">
+                        </div>
+                        <div class="photo-preview-container hidden" id="photoPreviewContainer">
+                            <img id="photoPreview" src="" alt="Favorite picture preview">
+                            <button type="button" class="remove-photo-btn" onclick="removeGuestPhoto(event)">Remove</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary animate-pop">Start predictions 🌟</button>
+                </form>
+            </article>
+
+            <!-- SLIDE 1: Getting to Know You (Q1 - Q2) -->
+            <article class="slide-card" id="slide1">
+                <div class="card-badge">💛 Getting to Know You</div>
+                <h3>Let's know you better!</h3>
+                <div class="question-box">
+                    <p class="question-text">Who are you to the baby's Mom/Dad?</p>
+                    <textarea class="styled-textarea" id="q_whoAreYou" placeholder="Write a short sweet detail about your bond with Ashwin & Ratty..."></textarea>
+                </div>
+                <div class="question-box">
+                    <p class="question-text">How do you want the baby to call you?</p>
+                    <textarea class="styled-textarea" id="q_babyCall" placeholder="What cute title or nickname should the little one use for you?"></textarea>
+                </div>
+                <div class="slide-navigation">
+                    <button class="btn-secondary" onclick="prevSlide()">Back</button>
+                    <button class="btn-primary" onclick="nextSlide()">Continue 👣</button>
+                </div>
+            </article>
+
+            <!-- SLIDE 2: Photo Strip Intermission 1 -->
+            <article class="slide-card text-center" id="slide2">
+                <h3>Mom & Dad: Double Trouble</h3>
+                <div class="polaroid-wrapper">
+                    <div class="polaroid-strip">
+                        <img src="assets/balloons.jpg" alt="Ashwin & Ratty Balloons" class="polaroid-img">
+                        <div class="polaroid-caption">❤️</div>
+                    </div>
+                </div>
+                <div class="slide-navigation">
+                    <button class="btn-secondary" onclick="prevSlide()">Back</button>
+                    <button class="btn-primary" onclick="nextSlide()">Let's Guess! 🧸</button>
+                </div>
+            </article>
+
+            <!-- SLIDE 3: Baby? Section 1 (Q3 - Q10) -->
+            <article class="slide-card" id="slide3">
+                <div class="card-badge">🧸 Baby Predictions: Part 1</div>
+                <h3>Who will the baby inherit this from?</h3>
+                <p class="instruction-text">Choose between Ashwin (Dad) or Ratty (Mom) for each fun trait!</p>
+                
+                <div class="interactive-questions-list">
+                    <!-- Questions will be dynamically loaded here by app.js -->
+                    <div id="quizContainerPart1"></div>
+                </div>
+
+                <div class="slide-navigation">
+                    <button class="btn-secondary" onclick="prevSlide()">Back</button>
+                    <button class="btn-primary" onclick="nextSlide()">Next Stage 🧩</button>
+                </div>
+            </article>
+
+            <!-- SLIDE 4: Interactive Jigsaw Puzzle (Click-to-Swap Grid) -->
+            <article class="slide-card" id="slide4">
+                <div class="card-badge">🧩 Jigsaw Puzzle Break</div>
+                <h3>Piece the Memory Together!</h3>
+                <p class="instruction-text text-center">Tap two tiles to swap their positions! Recreate the cake cutting memory in its correct order to unlock the next predictions!</p>
+                
+                <div class="puzzle-wrapper animate-pop">
+                    <!-- The puzzle container -->
+                    <div class="puzzle-container" id="puzzleContainer"></div>
+                    <div class="puzzle-controls-row">
+                        <button class="btn-small" onclick="shufflePuzzle()">Shuffle 🔄</button>
+                        <button class="btn-small btn-secondary-outline" onclick="skipPuzzle()">Skip Puzzle ⏭️</button>
+                    </div>
+                </div>
+                
+                <div class="puzzle-success-message hidden" id="puzzleSuccessMessage">
+                    🎉 Excellent! You solved it! You unlocked the <strong>"Expert Puzzle Solver"</strong> badge!
+                </div>
+
+                <div class="slide-navigation">
+                    <button class="btn-secondary" onclick="prevSlide()">Back</button>
+                    <button class="btn-primary disabled" id="puzzleNextBtn" onclick="nextSlide()" disabled>Solve to continue ➔</button>
+                </div>
+            </article>
+
+            <!-- SLIDE 5: Baby? Section 2 (Q11 - Q23) -->
+            <article class="slide-card" id="slide5">
+                <div class="card-badge">🧸 Baby Predictions: Part 2</div>
+                <h3>Parenting Shenanigans!</h3>
+                <p class="instruction-text">Tap to select your guess for these hilarious parenting scenarios!</p>
+                
+                <div class="interactive-questions-list">
+                    <!-- Questions will be dynamically loaded here by app.js -->
+                    <div id="quizContainerPart2"></div>
+                </div>
+
+                <div class="slide-navigation">
+                    <button class="btn-secondary" onclick="prevSlide()">Back</button>
+                    <button class="btn-primary" onclick="nextSlide()">Messages 📝</button>
+                </div>
+            </article>
+
+            <!-- SLIDE 6: Messages for Baby & Parents -->
+            <article class="slide-card" id="slide6">
+                <div class="card-badge">😂 Messages for Baby & Parents</div>
+
+                <div class="text-questions-grid">
+                    <div class="form-group-text">
+                        <label for="q_nickname">What ridiculous nickname will the baby end up with?</label>
+                        <input type="text" id="q_nickname">
+                    </div>
+                    <div class="form-group-text">
+                        <label for="q_favorite">Who will become the baby's favorite family member?</label>
+                        <input type="text" id="q_favorite">
+                    </div>
+                    <div class="form-group-text">
+                        <label for="q_superpower">If you could give the baby one superpower, what would it be?</label>
+                        <input type="text" id="q_superpower">
+                    </div>
+                    <div class="form-group-text">
+                        <label for="q_wish">What's one word that describes your wish for this baby?</label>
+                        <input type="text" id="q_wish">
+                    </div>
+                    <div class="form-group-text">
+                        <label for="q_spoiling">How do you plan on spoiling the baby?</label>
+                        <textarea id="q_spoiling"></textarea>
+                    </div>
+                    <div class="form-group-text">
+                        <label for="q_lifeskill">What is the most important life skill you are going to teach this kid?</label>
+                        <input type="text" id="q_lifeskill">
+                    </div>
+                </div>
+
+                <div class="slide-navigation">
+                    <button class="btn-secondary" onclick="prevSlide()">Back</button>
+                    <button class="btn-primary" onclick="nextSlide()">Review Guess ➔</button>
+                </div>
+            </article>
+
+            <!-- SLIDE 7: Photo Intermission 2 & Guest Stats -->
+            <article class="slide-card text-center" id="slide7">
+                <div class="card-badge">✨ Beautiful Moments</div>
+                <h3>Ready to make your Official Guess?</h3>
+                
+                <div class="polaroid-wrapper">
+                    <div class="polaroid-strip">
+                        <img src="assets/balloons.jpg" alt="Ashwin & Ratty Balloons" class="polaroid-img-full">
+                        <div class="polaroid-caption">A sweet double-check... 🎈</div>
+                    </div>
+                </div>
+
+                <!-- Live stats from parent choices -->
+                <div class="stats-comparison-box">
+                    <h4>Based on your predictions:</h4>
+                    <p class="stats-paragraph" id="statsParagraph">You think the baby will take after Mom (Ratty) 50% and Dad (Ashwin) 50%!</p>
+                    <div class="stats-bar-outer">
+                        <div class="stats-bar-ratty" id="statsBarRatty" style="width: 50%;">Mom (Ratty)</div>
+                        <div class="stats-bar-ashwin" id="statsBarAshwin" style="width: 50%;">Dad (Ashwin)</div>
+                    </div>
+                </div>
+
+                <div class="slide-navigation">
+                    <button class="btn-secondary" onclick="prevSlide()">Back</button>
+                    <button class="btn-primary" onclick="nextSlide()">Final Guess! 🔮</button>
+                </div>
+            </article>
+
+            <!-- SLIDE 8: Final Predictions & Official Guess -->
+            <article class="slide-card" id="slide8">
+                <div class="card-badge">🔮 Final Prediction</div>
+                <p class="instruction-text text-center">Lock in your final official guess below!</p>
+
+                <div class="team-selector-container">
+                    <div class="team-card girl" id="teamGirlCard" onclick="selectTeam('girl')">
+                        <div class="team-emoji">🎀</div>
+                        <h4>Team Girl</h4>
+                        <p>Cute, sweet, and spirited!</p>
+                        <span class="select-badge">Selected</span>
+                    </div>
+                    <div class="team-card boy" id="teamBoyCard" onclick="selectTeam('boy')">
+                        <div class="team-emoji">🧸</div>
+                        <h4>Team Boy</h4>
+                        <p>Playful, active, and charming!</p>
+                        <span class="select-badge">Selected</span>
+                    </div>
+                </div>
+
+                <div class="form-group scale-group">
+                    <label>How confident are you in your prediction?</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="guessConfidence" min="1" max="10" value="5" oninput="updateConfidenceVal(this.value)">
+                        <div class="slider-labels">
+                            <span>Not sure (1)</span>
+                            <span class="slider-val" id="confidenceValueDisplay">5 / 10</span>
+                            <span>Absolute Certainty (10)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="guessClue">What clue convinced you of your guess?</label>
+                    <textarea id="guessClue" class="styled-textarea"></textarea>
+                </div>
+
+                <div class="form-group name-suggestions-box">
+                    <label>Do you have any baby name suggestions?</label>
+                    <div class="name-suggestions-grid">
+                        <div class="suggestion-col">
+                            <span class="suggestion-lbl">🧸 Boy Names suggestions</span>
+                            <input type="text" id="suggest_boy1" placeholder="Suggestion 1" class="margin-bottom-sm">
+                            <input type="text" id="suggest_boy2" placeholder="Suggestion 2">
+                        </div>
+                        <div class="suggestion-col">
+                            <span class="suggestion-lbl">🎀 Girl Names suggestions</span>
+                            <input type="text" id="suggest_girl1" placeholder="Suggestion 1" class="margin-bottom-sm">
+                            <input type="text" id="suggest_girl2" placeholder="Suggestion 2">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group text-center">
+                    <label>Will the baby arrive early, on time, or late?</label>
+                    <div class="timing-selector">
+                        <button type="button" class="timing-btn" id="timingEarly" onclick="selectTiming('Early')">Early 🏃‍♂️</button>
+                        <button type="button" class="timing-btn active" id="timingOnTime" onclick="selectTiming('On Time')">On Time ⏰</button>
+                        <button type="button" class="timing-btn" id="timingLate" onclick="selectTiming('Late')">Late 🐢</button>
+                    </div>
+                </div>
+
+                <div class="slide-navigation">
+                    <button class="btn-secondary" onclick="prevSlide()">Back</button>
+                    <button class="btn-primary" onclick="nextSlide()">POP THE BALLOON! 🎈</button>
+                </div>
+            </article>
+
+            <!-- SLIDE 9: The Magic Balloon Pop Reveal (Color Video / Animation) -->
+            <article class="slide-card text-center" id="slide9">
+                <div class="card-badge">🎈 The Moment of Truth</div>
+                <h3 id="balloonTitle">The Giant Black Reveal Balloon</h3>
+                <p class="instruction-text" id="balloonInstruction">Click / Tap the balloon to inflate & pop it for the grand reveal!</p>
+
+                <!-- Audio Playback helper -->
+                <div class="balloon-game-container">
+                    <!-- Balloon element -->
+                    <div class="balloon-reveal-element" id="revealBalloon" onclick="tapBalloon()">
+                        <div class="balloon-skin">
+                            <span class="balloon-text">Boy<br>or<br>Girl?</span>
+                        </div>
+                        <div class="balloon-knot"></div>
+                        <div class="balloon-string"></div>
+                    </div>
+                    
+                    <!-- Reveal Card -->
+                    <div class="gender-reveal-box hidden" id="genderRevealBox">
+                        <div class="gender-reveal-glow" id="revealGlow"></div>
+                        <div class="reveal-inner">
+                            <span class="reveal-badge-tag" id="revealBadgeTag">Congratulations!</span>
+                            <h2 class="reveal-announcement" id="revealAnnouncement">It's a Girl!</h2>
+                            <div class="reveal-baby-graphic" id="revealBabyGraphic">
+                                <img src="assets/babies.png" alt="Prank Graphic" class="reveal-baby-graphic-img animate-wobble" style="width: 140px; height: 140px; object-fit: contain; margin: 15px auto; display: block;">
+                            </div>
+                            <p class="reveal-desc" id="revealDesc">Get ready for hair bows, giggles, and beautiful memories!</p>
+                            <button class="btn-primary scale-in" onclick="nextSlide()">Are you ready? ➔</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slide-navigation" id="balloonNavBack">
+                    <button class="btn-secondary" onclick="prevSlide()">Back</button>
+                </div>
+            </article>
+
+            <!-- SLIDE 10: Secret Riddle Hint Challenge -->
+            <article class="slide-card text-center" id="slide10">
+                <div class="card-badge">🔍 Secret Riddle Hint</div>
+                <h3>Decipher the Riddle!</h3>
+                <p class="instruction-text text-center">Look really closely at the riddle image below. Can you decode the secret message hidden in it?</p>
+                
+                <div class="riddle-container">
+                    <img src="assets/riddle.jpg" alt="Secret Riddle" class="riddle-img animate-pop">
+                    
+                    <div class="form-group-text margin-top-md" style="width: 100%; max-width: 380px; margin: 20px auto 0 auto;">
+                        <label for="q_riddle_answer" class="text-center font-bold">What is the hidden secret message?</label>
+                        <input type="text" id="q_riddle_answer" style="text-align: center;" placeholder="Type the secret phrase here...">
+                    </div>
+                </div>
+
+                <div class="slide-navigation">
+                    <button class="btn-secondary" onclick="prevSlide()">Back</button>
+                    <button class="btn-primary" onclick="nextSlide()">Unlock Predictions Summary 🔑</button>
+                </div>
+            </article>
+
+            <!-- SLIDE 11: Final PDF & Summary Card -->
+            <article class="slide-card printable-card" id="slide11">
+                
+                <div class="certificate-container" id="certificateContent">
+                    <div class="cert-gold-border"></div>
+                    <div class="cert-watermark">👶</div>
+
+                    <div class="cert-guest-row">
+                        <p class="cert-guest-name" id="certGuestName">Lovely Guest</p>
+                        <p class="cert-label-sub" id="certGuestTitle">Title for the baby: Aunty</p>
+                    </div>
+
+                    <div class="cert-prediction-row">
+                        <div class="cert-col text-center">
+                            <span class="cert-lbl">Official Guess</span>
+                            <span class="cert-val pink-highlight" id="certOfficialGuess">Team Girl 🎀</span>
+                        </div>
+                        <div class="cert-col text-center">
+                            <span class="cert-lbl">Confidence</span>
+                            <span class="cert-val" id="certConfidence">8 / 10</span>
+                        </div>
+                        <div class="cert-col text-center">
+                            <span class="cert-lbl">Baby Arrival</span>
+                            <span class="cert-val" id="certArrival">On Time ⏰</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-stats-comparison">
+                        <h4>Parent Personality Match:</h4>
+                        <div class="cert-bar-wrapper">
+                            <div class="cert-bar-lbl" id="certMomPct">Mom (Ratty): 50%</div>
+                            <div class="cert-bar-track">
+                                <div class="cert-bar-fill" id="certBarFill" style="width: 50%;"></div>
+                            </div>
+                            <div class="cert-bar-lbl" id="certDadPct">Dad (Ashwin): 50%</div>
+                        </div>
+                    </div>
+
+                    <div class="cert-details-grid">
+                        <div class="cert-detail-item">
+                            <strong>My Bond with Mom/Dad:</strong>
+                            <p id="certBondText">Close friend</p>
+                        </div>
+                        <div class="cert-detail-item">
+                            <strong>Baby's Nickname Guess:</strong>
+                            <p id="certNicknameText">Lil Peanut</p>
+                        </div>
+                        <div class="cert-detail-item">
+                            <strong>Wish for the Baby:</strong>
+                            <p id="certWishText">Love</p>
+                        </div>
+                        <div class="cert-detail-item">
+                            <strong>The Clue that Convinced Me:</strong>
+                            <p id="certClueText">Mom's radiant glow!</p>
+                        </div>
+                        <div class="cert-detail-item full-width-cert">
+                            <strong>My Baby Name Suggestions:</strong>
+                            <p id="certSuggestionsText">None</p>
+                        </div>
+                    </div>
+
+                    <!-- Side-by-side Polaroid-style photos row in Summary -->
+                    <div class="cert-photos-row" id="certPhotosRow">
+                        <div class="cert-polaroid-box" id="certGuestPhotoBox">
+                            <div class="polaroid-inner">
+                                <img id="certGuestPhoto" src="assets/balloons.jpg" alt="Guest Memory">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PRINTABLE ALL ANSWERS SUMMARY SHEET (Hidden on screen, styled exclusively for PDF print) -->
+                <div class="answers-pdf-container" id="answersContent">
+                    <div class="cert-gold-border"></div>
+                    
+                    <div class="answers-header-box text-center">
+                        <h2>Ashwin & Ratty's Baby Reveal</h2>
+                        <p class="ans-guest-name" id="ansGuestName">Predictions logged by: Guest Name</p>
+                    </div>
+                    
+                    <div class="ans-section">
+                        <h4>Getting to Know You</h4>
+                        <div class="ans-row"><strong>Who are you to Mom/Dad:</strong> <span id="ans_whoAreYou"></span></div>
+                        <div class="ans-row"><strong>How baby should call you:</strong> <span id="ans_babyCall"></span></div>
+                    </div>
+                    
+                    <div class="ans-section">
+                        <h4>Baby Traits Predictions (Part 1)</h4>
+                        <div class="ans-grid" id="ansGridPart1"></div>
+                    </div>
+                    
+                    <div class="ans-section">
+                        <h4>Parenting Predictions (Part 2)</h4>
+                        <div class="ans-grid" id="ansGridPart2"></div>
+                    </div>
+                    
+                    <div class="ans-section">
+                        <h4>Funny Nicknames & Messages</h4>
+                        <div class="ans-grid" id="ansGridMessages"></div>
+                    </div>
+                    
+                    <div class="ans-section">
+                        <h4>Official Guess & Clue</h4>
+                        <div class="ans-row"><strong>Official Guess:</strong> <span id="ans_officialGuess"></span></div>
+                        <div class="ans-row"><strong>Confidence Level:</strong> <span id="ans_confidence"></span></div>
+                        <div class="ans-row"><strong>Convinced Clue:</strong> <span id="ans_clue"></span></div>
+                        <div class="ans-row"><strong>Arrival Prediction:</strong> <span id="ans_arrival"></span></div>
+                    </div>
+
+                    <!-- Side-by-side Polaroid-style photos row in Answers Log -->
+                    <div class="cert-photos-row" id="ansPhotosRow">
+                        <div class="cert-polaroid-box" id="ansGuestPhotoBox">
+                            <div class="polaroid-inner">
+                                <img id="ansGuestPhoto" src="assets/balloons.jpg" alt="Guest Memory">
+                            </div>
+                        </div>
+                        <div class="cert-polaroid-box">
+                            <div class="polaroid-inner">
+                                <img src="assets/cake.jpg" alt="Cake Cutting">
+                            </div>
+                        </div>
+                        <div class="cert-polaroid-box">
+                            <div class="polaroid-inner">
+                                <img src="assets/couple_reveal.png" alt="Couple Reveal">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SAVE PDF CALLOUT (Encourages guests to save before leaving) -->
+                <div class="save-pdf-callout no-print">
+                    <h4>💾 Save Your Predictions!</h4>
+                    <p>Be sure to print or save your predictions summary cards as PDFs to keep your guesses forever!</p>
+                    <div class="pdf-buttons-row">
+                        <button class="btn-success animate-pop" onclick="printCertificate()">Print Predictions Summary 💾</button>
+                        <button class="btn-primary animate-pop" onclick="printAllAnswers()">Print Detailed Answers 📄</button>
+                    </div>
+                </div>
+
+                <div class="slide-navigation no-print" style="margin-top: 30px;">
+                    <button class="btn-secondary" onclick="prevSlide()">Back</button>
+                    <button class="btn-success animate-pop font-bold disabled" id="revealNextBtn" onclick="nextSlide()" disabled>Save PDFs to reveal actual gender ➔</button>
+                </div>
+            </article>
+
+            <!-- SLIDE 12: THE GRAND REVEAL PAGE (ACTUAL REVEAL) -->
+            <article class="slide-card text-center" id="slide12">
+                
+                <div class="grand-reveal-card animate-pop">
+                    <div class="reveal-watercolor-bg"></div>
+                    
+                    <p class="instruction-text text-center" id="finalRevealInstruction" style="margin-bottom: 15px; font-weight: 600;">Smudge the blurred picture below with your finger or mouse!</p>
+
+                    <div class="reveal-image-container">
+                        <div class="final-smudge-wrapper" id="finalRevealSmudgeWrapper">
+                            <img src="assets/couple_reveal.png" alt="Couple Reveal Graphic" class="reveal-baby-graphic-img smudge-target-img animate-wobble" id="finalRevealTargetImg" style="filter: none; object-fit: contain;">
+                            <canvas id="finalRevealSmudgeCanvas"></canvas>
+                            
+                            <!-- Interactive Blue Balloon overlay -->
+                            <div class="balloon-reveal-element hidden" id="finalBlueBalloon" onclick="popFinalBlueBalloon()">
+                                <div class="balloon-skin blue-balloon-skin">
+                                    <span class="balloon-text">Pop<br>Me! 💙</span>
+                                </div>
+                                <div class="balloon-knot blue-balloon-knot"></div>
+                                <div class="balloon-string"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slide-navigation no-print">
+                    <button class="btn-secondary-outline animate-pop" onclick="restartApp()">Play Again 🔄</button>
+                </div>
+            </article>
+
+        </section>
+
+    </main>
+
+    <!-- Audio FX Elements Synthesizer (Built in App.js) -->
+    <!-- Confetti global canvas -->
+    <canvas id="revealCanvas" class="reveal-canvas hidden"></canvas>
+
+    <!-- Validation Toast Alert -->
+    <div id="validationToast" class="validation-toast">⚠️ Please answer all questions on this page first!</div>
+
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>
